@@ -4,177 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>London Home Dashboard</title>
-    <!-- REMOVED: Tailwind CSS CDN -->
-    
-    <!-- NEW: Add Chart.js CDN (v3.9.1) - This is old enough to be compatible -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    
-    <!-- Use Inter font family -->
-    <style>
-        /* Manually import Inter font */
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- NEW: Add Chart.js CDN (v3.9.1) --><script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- Use Inter font family --><style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        
-        /* --- START: Manual CSS Rewrite (Replaces Tailwind) --- */
-        
-        /* Reset and Base */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        :root {
+            /* Define a slightly blue-gray dark background */
+            --background-color: #0b1118; 
+            /* Define primary accent color for text and icons */
+            --accent-color: #7dd3fc; /* Light Cyan/Indigo */
         }
-
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
-            /* Hardcoded background color (was CSS var) */
-            background-color: #0b1118; 
+            background-color: var(--background-color); 
             /* Optional: subtle background gradient for depth */
             background-image: radial-gradient(at 0% 0%, #1a2b4b 0%, transparent 50%), 
                               radial-gradient(at 100% 100%, #1e1b4b 0%, transparent 50%);
             color: #e5e7eb; /* Light gray text */
-            padding: 1rem; /* Replaces p-4 */
         }
-        
-        /* Main container */
-        .container {
-            max-width: 80rem; /* Replaces max-w-4xl */
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Spacing for children of .container */
-        .container > * + * {
-            margin-top: 1.5rem; /* Replaces space-y-6 */
-        }
-
-        /* Header */
-        .header {
-            margin-bottom: 1.5rem; /* Replaces mb-6 */
-            margin-top: 0.5rem; /* Replaces mt-2 */
-            padding-bottom: 1rem; /* Replaces pb-4 */
-        }
-        
-        .header h1 {
-            font-size: 2.25rem; /* Replaces text-4xl */
-            line-height: 2.5rem;
-            font-weight: 300; /* Replaces font-light */
-            color: #7dd3fc; /* Replaces text-cyan-300 */
-        }
-
-        .header #clock-display {
-            font-size: 3rem; /* Replaces text-5xl */
-            line-height: 1;
-            font-weight: 800; /* Replaces font-extrabold */
-            color: #ffffff; /* Replaces text-white */
-            margin-top: 0.5rem; /* Replaces mt-2 */
-        }
-
-        .header #date-display {
-            font-size: 1rem; /* Replaces text-md */
-            line-height: 1.5rem;
-            color: #9ca3af; /* Replaces text-gray-400 */
-            margin-top: 0.25rem; /* Replaces mt-1 */
-        }
-
-        /* Card Grid (Replaces CSS Grid with Float Layout) */
-        .card-grid {
-            margin-left: -0.75rem;
-            margin-right: -0.75rem;
-        }
-        /* Clearfix to contain floats */
-        .card-grid:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        .card-column {
-            width: 100%; /* Mobile default */
-            float: left;
-            padding: 0.75rem; /* Emulates gap-6 */
-        }
-        
-        /* Spacing for cards in the first column */
-        .card-column > * + * {
-             margin-top: 1.5rem; /* Replaces space-y-6 */
-        }
-
-        /* Tablet Breakpoint */
-        @media (min-width: 768px) {
-            .card-column {
-                width: 50%; /* 2 columns */
-            }
-            /* Tide graph becomes full width on tablet */
-            #tide-graph-container {
-                width: 100%;
-            }
-        }
-        
-        /* Desktop Breakpoint */
-        @media (min-width: 1024px) {
-            .card-column {
-                width: 33.333%; /* 3 columns */
-            }
-            /* Tide graph goes back to 1/3 width */
-            #tide-graph-container {
-                width: 33.333%;
-            }
-        }
-        
-        /* Glass Card Style */
-        .glass-card {
-            /* Hardcoded glass-card styles */
-            background-color: rgba(30, 41, 59, 0.45); 
-            border: 1px solid rgba(107, 114, 128, 0.2); 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 2px rgba(255, 255, 255, 0.1); 
-            padding: 1.5rem; /* Replaces p-6 */
-            border-radius: 1.5rem; /* Replaces rounded-3xl */
-            /* REMOVED: backdrop-filter: blur(16px); */
-            /* REMOVED: -webkit-backdrop-filter: blur(16px); */
-        }
-
-        /* Bus card is full width */
-        .bus-card-container {
-            margin-top: 1.5rem;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            font-size: 0.875rem; /* Replaces text-sm */
-            line-height: 1.25rem;
-            color: #6b7280; /* Replaces text-gray-500 */
-            padding-top: 1rem; /* Replaces pt-4 */
-        }
-        .footer p + p {
-            margin-top: 0.25rem; /* Replaces mt-1 */
-        }
-
-        /* --- End: Manual CSS Rewrite --- */
-
-
-        /* Custom scrollbar (already compatible) */
+        /* Custom scrollbar for better mobile/iPad look */
         .scroll-container::-webkit-scrollbar {
             display: none;
         }
+        /* Hide scrollbar for Chrome, Safari and Opera */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+        /* Hide scrollbar for IE, Edge and Firefox */
         .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
 
-        /* Bus list item striping (already compatible) */
+        /* Glassmorphism Effect Class */
+        .glass-card {
+            background-color: rgba(30, 41, 59, 0.45); /* Slightly less opaque for better depth */
+            border: 1px solid rgba(107, 114, 128, 0.2); /* Subtle light border */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            /* Increased inner shadow for 'lifted' effect */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 2px rgba(255, 255, 255, 0.1); 
+        }
+
+        /* NEW: Alternating background for bus list items */
         .bus-item:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(0, 0, 0, 0.1); /* Very dark transparent stripe */
         }
         
-        /* Accordion Styling (already compatible) */
+        /* Accordion Styling (Specific for glassmorphism look) */
         .tide-accordion summary {
             cursor: pointer;
+            /* REMOVED: padding: 8px 0; */
             outline: none;
             list-style: none; /* Hide default arrow */
+            /* REMOVED: color: #9ca3af; */ /* Let header text define its own color */
             font-weight: 500;
             display: flex;
             justify-content: space-between;
@@ -184,643 +68,398 @@
             display: none; /* Hide default arrow in webkit */
         }
         
+        /* Custom arrow/indicator on summary */
+        /* UPDATED: Switched to class, removed font-size/line-height for SVG */
         .tide-accordion summary .arrow-indicator {
             transition: transform 0.2s;
-            color: #7dd3fc;
-            width: 1.5rem;
+            color: #7dd3fc; /* Cyan accent color */
+            width: 1.5rem; /* Ensure space is reserved */
             height: 1.5rem;
             text-align: center;
-            flex-shrink: 0;
-            margin-left: 0.75rem;
+            flex-shrink: 0; /* Prevent arrow from shrinking */
+            margin-left: 0.75rem; /* Add space */
         }
         .tide-accordion[open] summary .arrow-indicator {
             transform: rotate(180deg);
         }
         
+        /* Style for the nested data items */
+        .tide-details-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        
         /* Canvas specific styling */
         #tide-graph-canvas {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(255, 255, 255, 0.05); /* Subtle transparent white background */
             border-radius: 8px;
             margin-top: 10px;
+            /* UPDATED: Increased max height slightly */
             max-height: 200px; 
         }
-
-        /* --- SKELETON LOADER STYLES (Manual) --- */
-        .skeleton {
-            margin-top: 1rem;
-        }
-        .skeleton-pulse {
-             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
-        }
-        .skeleton .line-1 { height: 3rem; background-color: rgba(107, 114, 128, 0.3); border-radius: 0.375rem; width: 50%; margin-bottom: 0.5rem; }
-        .skeleton .line-2 { height: 1.5rem; background-color: rgba(107, 114, 128, 0.3); border-radius: 0.375rem; width: 75%; margin-bottom: 0.75rem; }
-        .skeleton .line-3 { height: 1rem; background-color: rgba(107, 114, 128, 0.3); border-radius: 0.375rem; width: 33.333%; }
-        .skeleton .line-4 { height: 1.25rem; background-color: rgba(107, 114, 128, 0.3); border-radius: 0.375rem; width: 100%; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid rgba(107, 114, 128, 0.3); }
-
-        /* Skeleton for forecast */
-        .forecast-skeleton {
-            display: flex;
-            overflow-x: auto;
-        }
-        .forecast-skeleton-item {
-            flex-shrink: 0;
-            width: 9rem;
-            height: 8rem;
-            background-color: rgba(107, 114, 128, 0.3);
-            border-radius: 0.75rem;
-            padding: 0.75rem;
-            margin-right: 1rem;
-        }
-        .forecast-skeleton-item .line {
-            background-color: rgba(107, 114, 128, 0.5);
-            border-radius: 0.375rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Skeleton for bus */
-        .bus-skeleton-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem;
-            background-color: rgba(30, 41, 59, 0.45);
-            border-radius: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-        .bus-skeleton-item .left { display: flex; align-items: center; flex: 1; }
-        .bus-skeleton-item .icon { height: 2rem; width: 2.5rem; background-color: rgba(107, 114, 128, 0.3); border-radius: 0.375rem; }
-        .bus-skeleton-item .text { flex: 1; margin-left: 1rem; }
-        .bus-skeleton-item .line { background-color: rgba(107, 114, 128, 0.3); border-radius: 0.375rem; }
-        .bus-skeleton-item .line-1 { height: 1rem; width: 75%; margin-bottom: 0.5rem; }
-        .bus-skeleton-item .line-2 { height: 0.75rem; width: 50%; }
-        .bus-skeleton-item .right { height: 1.75rem; width: 5rem; background-color: rgba(107, 114, 128, 0.3); border-radius: 9999px; }
-
-
-        /* --- CARD HEADER STYLES (Manual) --- */
-        .card-header-title {
-            font-size: 1.25rem; /* text-xl */
-            line-height: 1.75rem;
-            font-weight: 700; /* font-bold */
-            color: #7dd3fc; /* text-cyan-400 */
-        }
-        .card-header-title span {
-            font-weight: 400; /* font-normal */
-            color: #ffffff; /* text-white */
-        }
-        .card-header-icon {
-            width: 2.5rem; /* w-10 */
-            height: 2.5rem; /* h-10 */
-            margin-right: 0.5rem; /* mr-2 */
-        }
-        .card-header-icon-group {
-            display: flex;
-            align-items: center;
-        }
-        .card-header-arrow {
-            width: 1.25rem; /* w-5 */
-            height: 1.25rem; /* h-5 */
-            color: #7dd3fc; /* text-cyan-300 */
-        }
-        .tide-accordion[open] .card-header-arrow {
-            transform: rotate(180deg);
-        }
-        .card-header-subtitle {
-            font-size: 0.75rem; /* text-xs */
-            line-height: 1rem;
-            color: #6b7280; /* text-gray-500 */
-        }
-        
-        /* --- CARD CONTENT STYLES (Manual) --- */
-        .card-content {
-            padding-top: 1rem; /* pt-4 */
-        }
-        .data-main {
-            font-size: 3rem; /* text-5xl */
-            line-height: 1;
-            font-weight: 800; /* font-extrabold */
-            margin-bottom: 0.25rem; /* mb-1 */
-            color: #ffffff; /* text-white */
-        }
-        .data-sub {
-            font-size: 1.125rem; /* text-lg */
-            line-height: 1.75rem;
-            color: #e5e7eb; /* text-gray-200 */
-        }
-        .data-detail {
-            font-size: 0.875rem; /* text-sm */
-            line-height: 1.25rem;
-            color: #9ca3af; /* text-gray-400 */
-            margin-top: 0.5rem; /* mt-2 */
-        }
-
-        /* Forecast card specific */
-        #forecast-list-container {
-            /* display: none; */ /* Handled by JS */
-        }
-        #forecast-list {
-            display: flex;
-            overflow-x: auto;
-        }
-        .forecast-item {
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            padding: 0.75rem; /* p-3 */
-            width: 10rem; /* w-40 */
-            height: 8rem; /* h-32 */
-            background-color: rgba(51, 65, 85, 0.4); /* bg-slate-800/40 */
-            border-radius: 0.75rem; /* rounded-xl */
-            margin-right: 0.75rem; /* space-x-3 */
-            /* Glass card styles */
-            background-color: rgba(30, 41, 59, 0.45); 
-            border: 1px solid rgba(107, 114, 128, 0.2); 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 2px rgba(255, 255, 255, 0.1);
-        }
-        .forecast-item p {
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 700; /* font-bold */
-            color: #7dd3fc; /* text-cyan-300 */
-        }
-        .forecast-item ul {
-            font-size: 0.75rem; /* text-xs */
-            margin-top: 0.375rem; /* space-y-1.5 */
-        }
-        .forecast-item ul li {
-            margin-top: 0.375rem;
-        }
-        .forecast-item ul li .font-medium {
-            font-weight: 500;
-        }
-        .forecast-item .text-blue-300 { color: #93c5fd; }
-        .forecast-item .text-gray-400 { color: #9ca3af; }
-        .forecast-item .text-green-300 { color: #86efac; }
-        .forecast-item .text-yellow-300 { color: #fde047; }
-
-
-        /* Bus card specific */
-        #bus-info-header {
-            margin-bottom: 1rem; /* mb-4 */
-            padding-bottom: 0.5rem; /* pb-2 */
-            border-bottom: 1px solid rgba(107, 114, 128, 0.3); /* border-b border-gray-600/50 */
-        }
-        #bus-info-header p {
-            font-size: 0.75rem; /* text-xs */
-            color: #6b7280; /* text-gray-500 */
-            margin-top: 0.25rem; /* mt-1 */
-        }
-        .bus-list-title {
-            font-size: 1.125rem; /* text-lg */
-            font-weight: 300; /* font-light */
-            color: #7dd3fc; /* text-cyan-300 */
-            margin-bottom: 1rem; /* mb-4 */
-            padding-bottom: 0.5rem; /* pb-2 */
-            border-bottom: 1px solid rgba(107, 114, 128, 0.3); /* border-b border-gray-600/50 */
-        }
-        #bus-list {
-            overflow-y: auto;
-            max-height: 24rem; /* max-h-96 */
-        }
-        #bus-list > * + * {
-            margin-top: 0.25rem; /* space-y-1 */
-        }
-        .bus-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem; /* p-3 */
-            background-color: rgba(30, 41, 59, 0.45);
-            border: 1px solid rgba(107, 114, 128, 0.2); 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 2px rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem; /* rounded-xl */
-        }
-        .bus-item-left {
-            display: flex;
-            align-items: center;
-        }
-        .bus-item-left .line-name {
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 800; /* font-extrabold */
-            color: #b0e0f6; /* text-cyan-200 */
-            width: 2.5rem; /* w-10 */
-            text-align: center;
-            margin-right: 1rem; /* space-x-4 */
-        }
-        .bus-item-left .line-dest {
-            color: #ffffff; /* text-white */
-            font-weight: 500; /* font-medium */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .bus-item-left .line-platform {
-            font-size: 0.75rem; /* text-xs */
-            color: #9ca3af; /* text-gray-400 */
-        }
-        .bus-item-time {
-            padding-left: 1rem; /* px-4 */
-            padding-right: 1rem;
-            padding-top: 0.25rem; /* py-1 */
-            padding-bottom: 0.25rem;
-            font-size: 0.875rem; /* text-sm */
-            border-radius: 9999px; /* rounded-full */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
-            flex-shrink: 0;
-        }
-        /* Time colors (manual) */
-        .bg-red-500-70 { background-color: rgba(239, 68, 68, 0.7); }
-        .text-white-bold-pulse { color: #ffffff; font-weight: 800; animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        .bg-yellow-500-70 { background-color: rgba(234, 179, 8, 0.7); }
-        .text-gray-900-bold { color: #111827; font-weight: 700; }
-        .bg-indigo-600-70 { background-color: rgba(79, 70, 229, 0.7); }
-        .text-white-bold { color: #ffffff; font-weight: 700; }
-
-        /* Tide graph styles */
-        #tide-graph-accordion summary {
-            border-bottom: 1px solid rgba(107, 114, 128, 0.3); /* border-b border-gray-600/50 */
-            padding-bottom: 0.5rem; /* pb-2 */
-            margin-bottom: 0.5rem; /* mb-2 */
-        }
-        #tide-graph-container .card-content {
-            padding-top: 0.5rem; /* pt-2 */
-        }
-        .chart-tooltip {
-            font-size: 0.75rem; /* text-xs */
-            color: #6b7280; /* text-gray-600 */
-            margin-top: 0.25rem; /* mt-1 */
-            text-align: center;
-        }
-        
-        /* Error messages */
-        .error-text {
-            color: #f87171; /* text-red-300 */
-        }
-        .error-message {
-            display: none;
-            color: #f87171; /* text-red-300 */
-            font-size: 0.875rem;
-            font-weight: 700;
-        }
-        .error-card-bg {
-             background-color: rgba(127, 29, 29, 0.5); /* bg-red-900/50 */
-        }
-        /* Hide helper */
-        .hidden {
-            display: none;
-        }
-
     </style>
 </head>
-<body class="p-4 md:p-8"> <!-- Classes kept for context, but styles are manual -->
+<body class="p-4 md:p-8">
 
-    <div class="container">
+    <div class="max-w-4xl mx-auto space-y-6">
         
-        <!-- Header -->
-        <div class="header">
-            <div>
-                <h1>London At A Glance</h1>
-                <p id="clock-display">--:--</p>
-                <p id="date-display">--</p>
+        <!-- Header with Title and Clock (NEW ALIGNMENT: LEFT) --><div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 mt-2 pb-4">
+            <div class="mb-2 md:mb-0">
+                <h1 class="text-4xl font-light text-cyan-300">London At A Glance</h1>
+                <p id="clock-display" class="text-5xl font-extrabold text-white leading-none mt-2">--:--</p>
+                <p id="date-display" class="text-md text-gray-400 mt-1">--</p>
             </div>
-        </div>
+            
+            <!-- REMOVED: Fullscreen Button --></div>
         
-        <!-- Grid Container -->
-        <div class="card-grid">
+        <!-- Grid Container (Responsive Layout) --><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <!-- Column 1 Wrapper -->
-            <div class="card-column">
+            <!-- NEW: Column 1 Wrapper for Weather + Forecast --><div class="space-y-6">
                 
-                <!-- 1. Weather Card -->
-                <div id="weather-card" class="glass-card">
+                <!-- 1. Weather Card (Open-Meteo) --><!-- UPDATED: Converted to <details> container --><div id="weather-card" class="glass-card p-6 rounded-3xl transition-all hover:ring-1 hover:ring-cyan-500">
                     <details class="tide-accordion" open>
                         <summary>
-                            <h2 class="card-header-title">Current Weather</h2>
-                            <div class="card-header-icon-group">
-                                <svg id="weather-icon" class="card-header-icon" style="color: #fde047;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                                <svg class="card-header-arrow arrow-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <!-- Original header content --><h2 class="text-xl font-bold text-cyan-400">Current Weather</h2>
+                            
+                            <!-- Group for icon and arrow --><div class="flex items-center space-x-2">
+                                <svg id="weather-icon" class="w-10 h-10 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                <!-- NEW: Arrow Indicator SVG --><svg class="arrow-indicator w-5 h-5 text-cyan-300 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
                         </summary>
                         
-                        <div class="card-content">
-                            <!-- SKELETON LOADER -->
-                            <div id="weather-loading" class="skeleton skeleton-pulse">
-                                <div class="line-1"></div>
-                                <div class="line-2"></div>
-                                <div class="line-3"></div>
+                        <!-- Collapsible Content --><div class="pt-4">
+                            <!-- SKELETON LOADER: Replaces the 'Loading...' P tag --><div id="weather-loading" class="mt-4 animate-pulse">
+                                <div class="h-12 bg-gray-700/50 rounded-md w-2/4 mb-2"></div>
+                                <div class="h-6 bg-gray-700/50 rounded-md w-3/4 mb-3"></div>
+                                <div class="h-4 bg-gray-700/50 rounded-md w-1/3"></div>
                             </div>
                             
-                            <div id="weather-data" class="hidden">
-                                <p class="data-main"><span id="temp-display">--</span>°C</p>
-                                <p class="data-sub"><span id="condition-display">--</span></p>
-                                <p class="data-detail">Wind: <span id="wind-display">--</span> mph</p>
+                            <div id="weather-data" class="mt-4 hidden">
+                                <!-- Adjusted font weight for primary data point --><p class="text-5xl font-extrabold mb-1 text-white"><span id="temp-display">--</span>°C</p>
+                                <p class="text-lg text-gray-200"><span id="condition-display">--</span></p>
+                                <p class="text-sm text-gray-400 mt-2">Wind: <span id="wind-display">--</span> mph</p>
                             </div>
                         </div>
                     </details>
                 </div>
-                <!-- END 1. Weather Card -->
-
-                <!-- 2. 24-Hour Advice Card -->
-                <div id="forecast-card" class="glass-card">
+                <!-- END 1. Weather Card --><!-- UPDATED: 24-Hour Advice Card --><!-- UPDATED: Converted to <details> container --><div id="forecast-card" class="glass-card p-6 rounded-3xl transition-all hover:ring-1 hover:ring-cyan-500">
                     <details class="tide-accordion" open>
                         <summary>
-                            <h2 class="card-header-title">24-Hour Advice</h2>
-                            <div class="card-header-icon-group">
-                                <svg class="card-header-icon" style="color: #7dd3fc;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <h2 class="text-xl font-bold text-cyan-400">24-Hour Advice</h2>
+                            <!-- Group for icon and arrow --><div class="flex items-center">
+                                <!-- NEW: Coat Icon inspired by user image --><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10 text-cyan-300 mr-2">
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 6 C9 4, 15 4, 15 6 L 17.5 6 A 1.5 1.5 0 0 1 19 7.5 L 19 19.5 A 1.5 1.5 0 0 1 17.5 21 L 6.5 21 A 1.5 1.5 0 0 1 5 19.5 L 5 7.5 A 1.5 1.5 0 0 1 6.5 6 L 9 6" />
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6 L 12 21" />
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 15 Q 9 17 10 15" />
                                   <path stroke-linecap="round" stroke-linejoin="round" d="M14 15 Q 15 17 16 15" />
                                 </svg>
-                                <svg class="card-header-arrow arrow-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <!-- Arrow Indicator SVG --><svg class="arrow-indicator w-5 h-5 text-cyan-300 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
                         </summary>
                         
-                        <div class="card-content">
-                            <!-- SKELETON LOADER -->
-                            <div id="forecast-loading" class="forecast-skeleton skeleton-pulse no-scrollbar">
-                                <div class="forecast-skeleton-item">
-                                    <div class="line" style="height: 1rem; width: 33%;"></div>
-                                    <div class="line" style="height: 0.75rem; width: 100%; margin-top: 0.75rem;"></div>
-                                    <div class="line" style="height: 0.75rem; width: 100%;"></div>
-                                    <div class="line" style="height: 0.75rem; width: 100%;"></div>
-                                </div>
-                                <div class="forecast-skeleton-item">
-                                    <div class="line" style="height: 1rem; width: 33%;"></div>
-                                    <div class="line" style="height: 0.75rem; width: 100%; margin-top: 0.75rem;"></div>
-                                    <div class="line" style="height: 0.75rem; width: 100%;"></div>
-                                    <div class="line" style="height: 0.75rem; width: 100%;"></div>
+                        <!-- Collapsible Content --><div class="pt-4">
+                            <!-- SKELETON LOADER: For advice card --><div id="forecast-loading" class="animate-pulse">
+                                <div class="flex overflow-x-auto no-scrollbar space-x-4">
+                                    <!-- Skeleton item --><div class="flex-shrink-0 w-36 h-32 bg-gray-700/50 rounded-xl p-3 space-y-2">
+                                        <div class="h-4 bg-gray-600/50 rounded-md w-1/3"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                    </div>
+                                    <!-- Skeleton item --><div class="flex-shrink-0 w-36 h-32 bg-gray-700/50 rounded-xl p-3 space-y-2">
+                                        <div class="h-4 bg-gray-600/50 rounded-md w-1/3"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                    </div>
+                                    <!-- Skeleton item --><div class="flex-shrink-0 w-36 h-32 bg-gray-700/50 rounded-xl p-3 space-y-2 hidden sm:block">
+                                        <div class="h-4 bg-gray-600/50 rounded-md w-1/3"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                        <div class="h-3 bg-gray-600/50 rounded-md w-full"></div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Forecast Data Container -->
-                            <div id="forecast-list-container" class="hidden">
-                                <div id="forecast-list" class="no-scrollbar">
-                                    <!-- Advice items will be injected here -->
-                                </div>
+                            <!-- Forecast Data Container --><div id="forecast-list-container" class="hidden">
+                                <div id="forecast-list" class="flex overflow-x-auto no-scrollbar space-x-3">
+                                    <!-- Advice items will be injected here --></div>
                             </div>
                         </div>
                     </details>
                 </div>
-                <!-- END 2. 24-Hour Advice Card -->
-            </div>
-            <!-- END Column 1 Wrapper -->
+                <!-- END UPDATED: 24-Hour Advice Card --></div>
+            <!-- END NEW: Column 1 Wrapper --><!-- 2. Thames Tide Level Card (Current Status) --><!-- UPDATED: Converted to <details> container --><div id="tide-card" class="glass-card p-6 rounded-3xl transition-all hover:ring-1 hover:ring-cyan-500">
+                <details class="tide-accordion" open>
+                    <summary>
+                        <!-- Original header content --><div class="flex flex-col">
+                            <h2 class="text-xl font-bold text-cyan-400">Thames Water Level</h2>
+                            <!-- Added station location subtitle --><p id="tide-station-name" class="text-xs text-gray-500">--</p>
+                        </div>
+                        
+                        <!-- Group for icon and arrow --><div class="flex items-center space-x-2">
+                            <!-- Updated SVG for wave pattern (Three waves, static blue) --><svg id="tide-icon" class="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 8s3-4 6-4 6 4 6 4 6-4 6-4M2 14s3-4 6-4 6 4 6 4 6-4 6-4M2 20s3-4 6-4 6 4 6 4 6-4 6-4"/>
+                            </svg>
+                            <!-- NEW: Arrow Indicator SVG --><svg class="arrow-indicator w-5 h-5 text-cyan-300 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </summary>
 
-            <!-- 3. Thames Tide Level Card -->
-            <div id="tide-card" class="card-column">
-                <div class="glass-card">
-                    <details class="tide-accordion" open>
-                        <summary>
-                            <div>
-                                <h2 class="card-header-title">Thames Water Level</h2>
-                                <p id="tide-station-name" class="card-header-subtitle">--</p>
+                    <!-- Collapsible Content --><div class="pt-4">
+                        <!-- SKELETON LOADER: Replaces the 'Loading...' P tag --><div id="tide-loading" class="mt-4 animate-pulse">
+                            <div class="h-12 bg-gray-700/50 rounded-md w-2/4 mb-2"></div>
+                            <div class="h-6 bg-gray-700/50 rounded-md w-3/4 mb-3"></div>
+                            <div class="h-4 bg-gray-700/50 rounded-md w-1/3"></div>
+                            <!-- Skeleton for accordion --><div class="mt-4 pt-3 border-t border-gray-600/50">
+                                <div class="h-5 bg-gray-700/50 rounded-md w-full"></div>
                             </div>
-                            <div class="card-header-icon-group">
-                                <svg id="tide-icon" class="card-header-icon" style="color: #60a5fa;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 8s3-4 6-4 6 4 6 4 6-4 6-4M2 14s3-4 6-4 6 4 6 4 6-4 6-4M2 20s3-4 6-4 6 4 6 4 6-4 6-4"/>
-                                </svg>
-                                <svg class="card-header-arrow arrow-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                        </summary>
-
-                        <div class="card-content">
-                            <!-- SKELETON LOADER -->
-                            <div id="tide-loading" class="skeleton skeleton-pulse">
-                                <div class="line-1"></div>
-                                <div class="line-2"></div>
-                                <div class="line-3"></div>
-                                <div class="line-4"></div>
-                            </div>
+                        </div>
+                        
+                        <div id="tide-data" class="mt-4 hidden">
+                            <!-- Adjusted font weight for primary data point --><p class="text-5xl font-extrabold mb-1 text-white"><span id="tide-level">--</span> m</p>
+                            <p class="text-lg text-gray-200" id="tide-status">--</p>
+                            <p class="text-sm text-gray-400 mt-2">Last reading: <span id="tide-time">--</span></p>
                             
-                            <div id="tide-data" class="hidden">
-                                <p class="data-main"><span id="tide-level">--</span> m</p>
-                                <p class="data-sub" id="tide-status">--</p>
-                                <p class="data-detail">Last reading: <span id="tide-time">--</span></p>
-                            </div>
-                        </div>
-                    </details>
-                </div>
+                            <!-- REMOVED: Tide Extremes Section as Accordion --></div>
+                    </div>
+                </details>
             </div>
-            <!-- END 3. Thames Tide Level Card -->
 
-            <!-- 4. Tide Graph Card -->
-            <div id="tide-graph-container" class="card-column">
-                <div class="glass-card">
-                    <details id="tide-graph-accordion" open class="tide-accordion">
-                        <summary>
-                            <span class="card-header-title">48-Hour Tide Graph</span>
-                            <div class="card-header-icon-group">
-                                <svg class="card-header-icon" style="color: #7dd3fc;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                  <path fill-rule="evenodd" d="M2.25 13.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v6.75a.75.75 0 0 1-1.5 0v-5.5L2.25 13.5ZM9.75 5.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v15a.75.75 0 0 1-1.5 0V6L9.75 5.25ZM17.25 9a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V9.75L17.25 9Z" clip-rule="evenodd" />
-                                </svg>
-                                <svg class="card-header-arrow arrow-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
-                        </summary>
-                        <div class="card-content" style="padding-top: 0.5rem;">
-                             <canvas id="tide-graph-canvas"></canvas>
-                             <p class="chart-tooltip">Hover over the graph for details.</p>
+            <!-- 3. NEW: Tide Graph Card (Separate Tile) --><!-- This section already uses <details>, just updating arrow --><div id="tide-graph-container" class="glass-card p-6 rounded-3xl transition-all hover:ring-1 hover:ring-cyan-500 lg:col-span-1 md:col-span-2 lg:md:col-span-1">
+                <details id="tide-graph-accordion" open class="tide-accordion pt-0">
+                    <summary class="border-b border-gray-600/50 pb-2 mb-2">
+                        <span class="text-xl font-bold text-cyan-400">48-Hour Tide Graph</span>
+                        <!-- Group for icon and arrow --><div class="flex items-center">
+                            <!-- NEW: Graph Icon --><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-cyan-300 mr-2">
+                              <path fill-rule="evenodd" d="M2.25 13.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v6.75a.75.75 0 0 1-1.5 0v-5.5L2.25 13.5ZM9.75 5.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v15a.75.75 0 0 1-1.5 0V6L9.75 5.25ZM17.25 9a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75v11.25a.75.75 0 0 1-1.5 0V9.75L17.25 9Z" clip-rule="evenodd" />
+                            </svg>
+                            <!-- UPDATED: Replaced span with SVG arrow --><svg class="arrow-indicator w-5 h-5 text-cyan-300 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
                         </div>
-                    </details>
-                </div>
+                    </summary>
+                    <div class="pt-2">
+                         <!-- CANVAS: Now controlled by Chart.js, removed fixed width/height --><canvas id="tide-graph-canvas"></canvas>
+                         <!-- UPDATED: Text to reflect interactivity --><p class="text-xs text-gray-600 mt-1 text-center">Hover over the graph for details.</p>
+                    </div>
+                </details>
             </div>
-            <!-- End 4. Tide Graph Card -->
+            <!-- End NEW Tide Graph Card --></div>
 
-        </div> <!-- End Card Grid -->
-
-        <!-- 5. Combined Bus Departures List Card -->
-        <div id="bus-list-container" class="glass-card bus-card-container">
+        <!-- 4. Combined Bus Departures List Card (Full Width on Small Screens) --><!-- UPDATED: Converted to <details> container --><div id="bus-list-container" class="glass-card p-6 rounded-3xl">
              <details class="tide-accordion" open>
                 <summary>
-                    <div style="flex-grow: 1;">
-                        <h2 class="card-header-title">Bus Stop: <span id="bus-stop-name-title">--</span></h2>
-                        <p id="bus-status-error" class="error-message">Error</p> 
+                    <!-- Grabbed the H2 and error message from the original header for the summary line --><div class="flex items-center justify-between flex-grow">
+                        <h2 class="text-xl font-bold text-cyan-400">Bus Stop: <span id="bus-stop-name-title" class="font-normal text-white">--</span></h2>
+                        <!-- Error message will appear here --><p id="bus-status-error" class="text-sm text-red-300 font-bold hidden"></p> 
                     </div>
-                    <div class="card-header-icon-group">
-                        <svg class="card-header-icon" style="color: #ef4444;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <!-- Group for icon and arrow --><div class="flex items-center">
+                        <!-- NEW: Bus Icon --><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-red-600 mr-2">
                           <path fill-rule="evenodd" d="M4.5 3.75A3.75 3.75 0 0 0 .75 7.5v10.5c0 .95.5 1.8 1.28 2.28L3 21.75v.938A.812.812 0 0 0 3.812 23.5h1.375a.812.812 0 0 0 .813-.812V21.75l.969-.969a3.75 3.75 0 0 0 2.28-1.28h7.103a3.75 3.75 0 0 0 2.28 1.28l.97.969v.938a.812.812 0 0 0 .812.812h1.375a.812.812 0 0 0 .813-.812v-.938l.969-.969c.78-.48 1.28-1.33 1.28-2.28V7.5A3.75 3.75 0 0 0 19.5 3.75h-15ZM4.5 6a.75.75 0 0 1 .75-.75h13.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75H5.25a.75.75 0 0 1-.75-.75V6Zm15 6a.75.75 0 0 0-.75-.75H5.25a.75.75 0 0 0-.75.75v3a.75.75 0 0 0 .75.75h13.5a.75.75 0 0 0 .75-.75v-3ZM5.625 18a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Zm12.75 0a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z" clip-rule="evenodd" />
                         </svg>
-                        <svg class="card-header-arrow arrow-indicator" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <!-- NEW: Arrow Indicator SVG --><svg class="arrow-indicator w-5 h-5 text-cyan-300 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
                 </summary>
 
-                <div class="card-content">
-                    <div id="bus-info-header">
-                        <p>Stop ID: <span id="bus-stop-id">--</span></p>
+                <!-- Collapsible Content --><div class="pt-4">
+                    <!-- NEW STOP HEADER SECTION (Modified) --><!-- Moved Stop ID here from header, kept border --><div id="bus-info-header" class="mb-4 pb-2 border-b border-gray-600/50">
+                        <p class="text-xs text-gray-500 mt-1">Stop ID: <span id="bus-stop-id">--</span></p>
                     </div>
                     
-                    <h3 class="bus-list-title">Upcoming Departures</h3>
+                    <h3 class="text-lg font-light text-cyan-300 mb-4 border-b border-gray-600/50 pb-2">Upcoming Departures</h3>
                     
-                    <!-- SKELETON LOADER -->
-                    <div id="bus-loading" class="skeleton-pulse">
-                        <div class="bus-skeleton-item">
-                            <div class="left">
-                                <div class="icon"></div>
-                                <div class="text">
-                                    <div class="line line-1"></div>
-                                    <div class="line line-2"></div>
+                    <!-- SKELETON LOADER: Replaces the 'Loading...' P tag --><div id="bus-loading" class="space-y-3 animate-pulse">
+                        <!-- Skeleton item 1 --><div class="flex items-center justify-between p-3 glass-card rounded-xl">
+                            <div class="flex items-center space-x-4 flex-1">
+                                <div class="h-8 w-10 bg-gray-700/50 rounded-md"></div>
+                                <div class="flex-1 space-y-2">
+                                    <div class="h-4 bg-gray-700/50 rounded-md w-3/4"></div>
+                                    <div class="h-3 bg-gray-700/50 rounded-md w-1/2"></div>
                                 </div>
                             </div>
-                            <div class="right"></div>
+                            <div class="h-7 w-20 bg-gray-700/50 rounded-full"></div>
                         </div>
-                        <div class="bus-skeleton-item">
-                            <div class="left">
-                                <div class="icon"></div>
-                                <div class="text">
-                                    <div class="line line-1"></div>
-                                    <div class="line line-2"></div>
+                        <!-- Skeleton item 2 --><div class="flex items-center justify-between p-3 glass-card rounded-xl">
+                            <div class="flex items-center space-x-4 flex-1">
+                                <div class="h-8 w-10 bg-gray-700/50 rounded-md"></div>
+                                <div class="flex-1 space-y-2">
+                                    <div class="h-4 bg-gray-700/50 rounded-md w-2/3"></div>
+                                    <div class="h-3 bg-gray-700/50 rounded-md w-1/2"></div>
                                 </div>
                             </div>
-                            <div class="right"></div>
+                            <div class="h-7 w-20 bg-gray-700/50 rounded-full"></div>
+                        </div>
+                        <!-- Skeleton item 3 --><div class="flex items-center justify-between p-3 glass-card rounded-xl">
+                            <div class="flex items-center space-x-4 flex-1">
+                                <div class="h-8 w-10 bg-gray-700/50 rounded-md"></div>
+                                <div class="flex-1 space-y-2">
+                                    <div class="h-4 bg-gray-700/50 rounded-md w-3/4"></div>
+                                    <div class="h-3 bg-gray-700/50 rounded-md w-1/2"></div>
+                                </div>
+                            </div>
+                            <div class="h-7 w-20 bg-gray-700/50 rounded-full"></div>
                         </div>
                     </div>
 
-                    <div id="bus-list" class="scroll-container">
-                        <!-- Bus items will be injected here -->
-                    </div>
+                    <div id="bus-list" class="space-y-1 scroll-container overflow-y-auto max-h-96">
+                        <!-- Bus items will be injected here --></div>
                 </div>
              </details>
         </div>
 
-        <!-- Last Updated Footer -->
-        <div class="footer">
+        <!-- Last Updated Footer --><div class="text-center text-sm text-gray-500 pt-4">
             <p id="last-updated">Last updated: --</p>
-            <p>Data provided by Open-Meteo, TfL, and the Environment Agency.</p>
+            <p class="mt-1">Data provided by Open-Meteo, TfL, and the Environment Agency.</p>
         </div>
     </div>
 
-    <!-- ES5-COMPATIBLE JAVASCRIPT -->
     <script>
         // --- MANDATORY CONFIGURATION SECTION ---
-        var LONDON_LAT = 51.5074;
-        var LONDON_LON = 0.1278;
-        var TFL_PRIMARY_KEY = "9a8fd770a5804ee6b233907040c5b99d";
-        var TFL_APP_ID = TFL_PRIMARY_KEY; 
-        var TFL_APP_KEY = TFL_PRIMARY_KEY; 
-        var TFL_NAPTAN_ID = "490006091W"; 
-        var FETCH_TIMEOUT_MS = 10000;
-        var EA_TIDE_STATION_ID = "0007"; 
-        var tideChartInstance = null;
+        // ---------------------------------------
+        
+        // 1. Open-Meteo Config (No API Key Required!)
+        const LONDON_LAT = 51.5074; // Latitude for central London
+        const LONDON_LON = 0.1278; // Longitude for central London
 
-        // --- Robustness Check ---
+        // 2. Transport for London (TfL) API Config
+        const TFL_PRIMARY_KEY = "9a8fd770a5804ee6b233907040c5b99d";
+        const TFL_APP_ID = TFL_PRIMARY_KEY; 
+        const TFL_APP_KEY = TFL_PRIMARY_KEY; 
+        const TFL_NAPTAN_ID = "490006091W"; 
+        const FETCH_TIMEOUT_MS = 10000; // 10 second timeout for API calls
+
+        // 3. Environment Agency (EA) Tide Gauge Config (Real-Time Level & Direction)
+        const EA_TIDE_STATION_ID = "0007"; 
+
+        // NEW: Global variable to hold the Chart.js instance
+        let tideChartInstance = null;
+
+        // --- NEW: Robustness Check for Configuration ---
         if (!TFL_NAPTAN_ID || !EA_TIDE_STATION_ID || !LONDON_LAT || !LONDON_LON || !TFL_PRIMARY_KEY) {
-            console.error("CRITICAL ERROR: Configuration variables are not set.");
-            document.body.innerHTML = '<div style="padding: 2rem; color: #f87171; font-family: sans-serif; font-size: 1.5rem; text-align: center; background: #111; height: 100vh; display: grid; place-items: center;">Configuration Error: Please check the JavaScript constants.</div>';
+            console.error("CRITICAL ERROR: Configuration variables (TFL_NAPTAN_ID, EA_TIDE_STATION_ID, TFL_PRIMARY_KEY, etc.) are not set.");
+            // Display a critical error and stop execution
+            document.body.innerHTML = `<div style="padding: 2rem; color: #f87171; font-family: sans-serif; font-size: 1.5rem; text-align: center; background: #111; height: 100vh; display: grid; place-items: center;">Configuration Error: Please check the JavaScript constants in the script tag.</div>`;
             throw new Error("Dashboard configuration is missing."); 
         }
 
-        // --- UTILITY FUNCTIONS (ES5) ---
+        // --- UTILITY FUNCTIONS ---
+        
+        // REMOVED: Fullscreen API Toggle function
 
         /**
-         * Utility to strip HTML tags (ES5 compatible)
+         * NEW: Utility to strip HTML tags to prevent XSS from dynamic data.
+         * This ensures that data like bus destinations can't inject malicious scripts.
          */
         function stripTags(str) {
             if (!str) return "";
+            // A simple regex to remove anything that looks like an HTML tag
             return str.toString().replace(/(<([^>]+)>)/gi, "");
         }
-        
+
+
         /**
-         * Helper to show/hide elements (ES5 compatible)
+         * ROBUST: Upgraded helper to perform API calls with timeouts, retries, and error handling.
+         * Now uses AbortController for timeouts.
+         * @param {string} url - The API endpoint URL.
+         * @param {string} errorMsg - A human-readable message for error logs.
+         * @param {object} options - Configuration object { auth, extraHeaders, timeout }
+         * @returns {Promise<object>} - A promise that resolves to the JSON data or an { error: "message" } object.
          */
-        function showElement(el) {
-            if (el) {
-                el.style.display = 'block';
+        async function fetchData(url, errorMsg, options = {}) {
+            // Destructure options with defaults
+            const { auth = {}, extraHeaders = {}, timeout = FETCH_TIMEOUT_MS } = options;
+            
+            // AbortController for timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+            try {
+                let headers = extraHeaders;
                 
-                // Special handling for flex containers
-                if (el.id === 'forecast-list' || el.id === 'forecast-loading') {
-                    el.style.display = 'flex';
-                }
-            }
-        }
-        
-        function hideElement(el) {
-            if (el) {
-                el.style.display = 'none';
-            }
-        }
-
-        /**
-         * ROBUST: Upgraded helper to perform API calls (ES5 compatible)
-         * Uses .then() and XHR-style timeout
-         */
-        function fetchData(url, errorMsg, options) {
-            // Manual default parameter handling
-            var options = options || {};
-            var auth = options.auth || {};
-            var extraHeaders = options.extraHeaders || {};
-            var timeout = options.timeout || FETCH_TIMEOUT_MS;
-
-            return new Promise(function(resolve, reject) {
-                var timeoutId = setTimeout(function() {
-                    reject(new Error("Request timed out (" + (timeout / 1000) + "s)."));
-                }, timeout);
-
                 // Add TfL auth parameters if provided
                 if (auth.id && auth.key) {
-                    url += (url.indexOf('?') > -1 ? '&' : '?') + 'app_id=' + auth.id + '&app_key=' + auth.key;
+                    url += `${url.includes('?') ? '&' : '?'}app_id=${auth.id}&app_key=${auth.key}`;
                 } else if (auth.key) {
-                    url += (url.indexOf('?') > -1 ? '&' : '?') + 'app_key=' + auth.key;
+                    url += `${url.includes('?') ? '&' : '?'}app_key=${auth.key}`;
                 }
-
-                fetch(url, { headers: extraHeaders })
-                    .then(function(response) {
-                        clearTimeout(timeoutId); // Clear timeout on successful response
-                        if (response.ok) {
-                            return response.json();
-                        } else {
-                            // Create an error to be caught by .catch
-                            var error = new Error(response.status + " " + (response.statusText || 'Error'));
-                            error.response = response;
-                            throw error;
-                        }
-                    })
-                    .then(function(json) {
-                        resolve(json); // Resolve promise with JSON data
-                    })
-                    .catch(function(error) {
-                        clearTimeout(timeoutId); // Clear timeout on fetch error
-                        console.error("[" + errorMsg + "] Fetch Error:", error.message);
-                        // Resolve with an error object, so Promise.allSettled works
-                        resolve({ error: error.message }); 
-                    });
-            });
+                
+                // Add exponential backoff logic
+                const maxRetries = 3;
+                for (let attempt = 0; attempt < maxRetries; attempt++) {
+                    // Pass signal to fetch
+                    const response = await fetch(url, { headers, signal: controller.signal }); 
+                    
+                    if (response.ok) {
+                        clearTimeout(timeoutId); // Clear timeout on success
+                        return await response.json();
+                    } else if (response.status === 429 && attempt < maxRetries - 1) {
+                        const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+                        console.warn(`[API] Rate limit hit for ${errorMsg}. Retrying in ${delay.toFixed(0)}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    } else if (!response.ok) {
+                        const statusText = response.statusText || 'Error';
+                        throw new Error(`${response.status} ${statusText}`);
+                    }
+                }
+                throw new Error(`${errorMsg}: Failed after ${maxRetries} attempts.`);
+            } catch (error) {
+                // Clear timeout on any error
+                clearTimeout(timeoutId); 
+                
+                // Handle AbortError (timeout) specifically
+                if (error.name === 'AbortError') {
+                    console.error(`[${errorMsg}] Fetch Error:`, `Timeout for ${errorMsg} (${timeout}ms)`);
+                    return { error: `Request timed out (${timeout / 1000}s).` };
+                }
+                
+                console.error(`[${errorMsg}] Fetch Error:`, error.message);
+                // Return an error object instead of throwing
+                return { error: error.message }; 
+            }
         }
 
         function formatTime(timestamp) {
-            var date = new Date(timestamp);
+            const date = new Date(timestamp);
             return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
         
         function formatDateTime(isoString) {
-             var date = new Date(isoString);
+             const date = new Date(isoString);
              return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
         
+        // NEW: Function to format date & time for Chart.js labels (e.g., "HH:MM\nDD Mon")
         function formatChartLabel(isoString) {
-            var date = new Date(isoString);
-            var time = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+            const date = new Date(isoString);
+            const time = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+            // UPDATED: Return only the time
             return time;
         }
 
+
+        // Function to update the clock every second
         function updateTimeAndDate() {
-            var now = new Date();
-            var timeString = now.toLocaleTimeString('en-GB', {
+            const now = new Date();
+            
+            // Format time (HH:MM)
+            const timeString = now.toLocaleTimeString('en-GB', {
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: false
             });
-            var dateString = now.toLocaleDateString('en-GB', {
+            
+            // Format date (Day, DD Mon YYYY)
+            const dateString = now.toLocaleDateString('en-GB', {
                 weekday: 'long',
                 day: 'numeric',
                 month: 'short',
@@ -831,98 +470,101 @@
             document.getElementById('date-display').textContent = dateString;
         }
 
+
         function minutesToArrival(timeOfArrival) {
-            var now = new Date();
-            var arrival = new Date(timeOfArrival);
-            var diffMs = arrival - now;
-            var diffMins = Math.round(diffMs / 60000);
+            const now = new Date();
+            const arrival = new Date(timeOfArrival);
+            const diffMs = arrival - now;
+            const diffMins = Math.round(diffMs / 60000);
             return diffMins > 0 ? diffMins : 0;
         }
         
+        // WMO Weather Codes mapping for Open-Meteo
         function getWeatherDescriptionAndIcon(code) {
-            var description = 'Unknown';
-            var iconPath = 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z'; 
-            var color = '#fde047'; // text-yellow-300
+            let description = 'Unknown';
+            let iconPath = 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z'; 
+            let color = 'text-yellow-300';
             
             if (code === 0) {
                 description = 'Clear Sky';
                 iconPath = 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z'; 
-                color = '#fde047';
+                color = 'text-yellow-300';
             } else if (code >= 1 && code <= 3) {
                 description = (code === 1) ? 'Mainly Clear' : (code === 2) ? 'Partly Cloudy' : 'Overcast';
                 iconPath = 'M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.782-2.09A4.004 4.004 0 003 15z'; 
-                color = '#d1d5db'; // text-gray-300
+                color = 'text-gray-300';
             } else if (code >= 45 && code <= 48) {
                 description = 'Foggy';
                 iconPath = 'M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.782-2.09A4.004 4.004 0 003 15z';
-                color = '#9ca3af'; // text-gray-400
+                color = 'text-gray-400';
             } else if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) {
                 description = (code > 60 && code < 70) ? 'Rain' : 'Drizzle/Showers';
                 iconPath = 'M14 11V9a2 2 0 00-2-2m0 0a2 2 0 00-2 2v2m2-2V7m2 4a2 2 0 002-2h-4m4 0h4a2 2 0 002-2v-2a2 2 0 00-2-2h-4a2 2 0 00-2 2v2a2 2 0 002 2zM12 21a9 9 0 100-18 9 9 0 000 18z'; 
-                color = '#3b82f6'; // text-blue-500
+                color = 'text-blue-500';
             } else if (code >= 71 && code <= 86) {
                 description = 'Snow';
                 iconPath = 'M4 14v-2h2v2H4zm-1 4h2v2H3zm2-6h2v2H5zm-1 4h2v2H4zm2-4h2v2H6zm-1 4h2v2H5zM15 4h2v2h-2zM17 6h2v2h-2zm-2 2h2v2h-2zm-2-2h2v2h-2zm2-4h2v2h-2zM15 8h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zM15 12h2v2h-2zm-2 2h2v2h-2zm2-2h2v2h-2zM15 14h2v2h-2zm-2 2h2v2h-2z'; 
-                color = '#ffffff'; // text-white
+                color = 'text-white';
             } else if (code >= 95) {
                 description = 'Thunderstorm';
                 iconPath = 'M13 14H9m0 0h4v-3a2 2 0 114 0v3h-4m-4 0v2m0 0h-4a2 2 0 11-2-2V7a2 2 0 112-2h4a2 2 0 012 2v2m-4 5V9m4 0v5m4-5v2'; 
-                color = '#b45309'; // text-yellow-700
+                color = 'text-yellow-700';
             }
             
-            return { description: description, iconPath: iconPath, color: color };
+            return { description, iconPath, color };
         }
 
 
-        // --- DATA FETCHING FUNCTIONS (ES5) ---
-
+        // RENAMED: from displayForecast to displayAdvice
+        // NEW: Function to populate the advice tile
         function displayAdvice(hourly) {
-            var loadingDiv = document.getElementById('forecast-loading');
-            var listContainer = document.getElementById('forecast-list-container');
-            var listDiv = document.getElementById('forecast-list');
+            const loadingDiv = document.getElementById('forecast-loading');
+            const listContainer = document.getElementById('forecast-list-container');
+            const listDiv = document.getElementById('forecast-list');
 
             if (!hourly || !hourly.time || !hourly.time.length) {
-                hideElement(loadingDiv);
-                showElement(listContainer);
-                listDiv.innerHTML = '<p style="color: #9ca3af; font-size: 0.875rem;">Advice data unavailable.</p>';
+                loadingDiv.classList.add('hidden');
+                listContainer.classList.remove('hidden');
+                listDiv.innerHTML = `<p class="text-gray-400 text-sm">Advice data unavailable.</p>`;
                 return;
             }
 
             try {
                 listDiv.innerHTML = ''; // Clear previous forecast
-                var now = new Date();
+                const now = new Date();
                 
-                var startIndex = -1;
-                for (var j = 0; j < hourly.time.length; j++) {
-                    if (new Date(hourly.time[j]) > now) {
-                        startIndex = j;
-                        break;
-                    }
-                }
-                
+                // Find the index of the first forecast hour that is *after* the current time
+                const startIndex = hourly.time.findIndex(t => new Date(t) > now);
                 if (startIndex === -1) {
                     throw new Error("No future forecast data found.");
                 }
 
-                for (var i = 0; i < 8; i++) {
-                    var dataIndex = startIndex + (i * 3);
+                // Display 8 intervals (3-hours * 8 = 24 hours)
+                for (let i = 0; i < 8; i++) {
+                    const dataIndex = startIndex + (i * 3);
+                    
+                    // Stop if we run out of data
                     if (dataIndex >= hourly.time.length) break;
 
-                    var timeStr = hourly.time[dataIndex];
-                    var time = formatTime(timeStr);
-                    var temp = Math.round(hourly.temperature_2m[dataIndex]);
-                    var precip_prob = hourly.precipitation_probability[dataIndex];
+                    const timeStr = hourly.time[dataIndex];
+                    const time = formatTime(timeStr);
+                    const temp = Math.round(hourly.temperature_2m[dataIndex]);
+                    const precip_prob = hourly.precipitation_probability[dataIndex];
 
-                    var umbrellaAdvice, umbrellaColor;
+                    // --- Generate Advice ---
+
+                    // 1. Umbrella Advice
+                    let umbrellaAdvice, umbrellaColor;
                     if (precip_prob > 0) {
-                        umbrellaAdvice = 'Umbrella needed (' + precip_prob + '%)';
+                        umbrellaAdvice = `Umbrella needed (${precip_prob}%)`;
                         umbrellaColor = 'text-blue-300';
                     } else {
                         umbrellaAdvice = "Umbrella not needed";
                         umbrellaColor = 'text-gray-400';
                     }
 
-                    var jacketAdvice, jacketColor;
+                    // 2. Jacket Advice
+                    let jacketAdvice, jacketColor;
                     if (temp > 20) {
                         jacketAdvice = "No jacket needed";
                         jacketColor = 'text-gray-400';
@@ -934,10 +576,12 @@
                         jacketColor = 'text-yellow-300';
                     }
 
-                    var precip_prob_3h = (dataIndex + 1 < hourly.precipitation_probability.length) ? hourly.precipitation_probability[dataIndex + 1] : 0;
-                    var precip_prob_6h = (dataIndex + 2 < hourly.precipitation_probability.length) ? hourly.precipitation_probability[dataIndex + 2] : 0;
+                    // 3. Footwear Advice (UPDATED LOGIC)
+                    // Check for high rain probability in the *next* 6 hours
+                    const precip_prob_3h = (dataIndex + 1 < hourly.precipitation_probability.length) ? hourly.precipitation_probability[dataIndex + 1] : 0;
+                    const precip_prob_6h = (dataIndex + 2 < hourly.precipitation_probability.length) ? hourly.precipitation_probability[dataIndex + 2] : 0;
                     
-                    var footwearAdvice, footwearColor;
+                    let footwearAdvice, footwearColor;
                     if (precip_prob > 40 || precip_prob_3h > 40 || precip_prob_6h > 40) {
                         footwearAdvice = "Consider boots (Rain likely)";
                         footwearColor = 'text-blue-300';
@@ -946,198 +590,239 @@
                         footwearColor = 'text-gray-400';
                     }
 
-                    // String concatenation instead of template literal
-                    var adviceItemHTML = 
-                        '<div class="forecast-item">' +
-                            '<p>' + time + '</p>' +
-                            '<ul>' +
-                                '<li class="' + jacketColor + '">' +
-                                    '<span class="font-medium">' + jacketAdvice + '</span> (' + temp + '°C)' +
-                                '</li>' +
-                                '<li class="' + umbrellaColor + '">' +
-                                    '<span class="font-medium">' + umbrellaAdvice + '</span>' +
-                                '</li>' +
-                                '<li class="' + footwearColor + '">' +
-                                    '<span class="font-medium">' + footwearAdvice + '</span>' +
-                                '</li>' +
-                            '</ul>' +
-                        '</div>';
+
+                    const adviceItemHTML = `
+                        <div class="flex-shrink-0 flex flex-col p-3 w-40 h-32
+                                    bg-slate-800/40 rounded-xl glass-card space-y-1.5">
+                            <!-- 1. Time --><p class="text-sm font-bold text-cyan-300">${time}</p>
+                            
+                            <!-- 2. Advice List --><ul class="text-xs space-y-1">
+                                <li class="${jacketColor}">
+                                    <span class="font-medium">${jacketAdvice}</span> (${temp}°C)
+                                </li>
+                                <li class="${umbrellaColor}">
+                                    <span class="font-medium">${umbrellaAdvice}</span>
+                                </li>
+                                <li class="${footwearColor}">
+                                    <span class="font-medium">${footwearAdvice}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    `;
                     listDiv.innerHTML += adviceItemHTML;
                 }
                 
-                hideElement(loadingDiv);
-                showElement(listContainer);
+                // Show the data
+                loadingDiv.classList.add('hidden');
+                listContainer.classList.remove('hidden');
 
             } catch (error) {
                 console.error("Failed to display advice:", error);
-                hideElement(loadingDiv);
-                showElement(listContainer);
-                listDiv.innerHTML = '<p style="color: #9ca3af; font-size: 0.875rem;">Error loading advice.</p>';
+                loadingDiv.classList.add('hidden');
+                listContainer.classList.remove('hidden');
+                listDiv.innerHTML = `<p class="text-gray-400 text-sm">Error loading advice.</p>`;
             }
         }
 
-        function fetchWeather() {
-            var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + LONDON_LAT + '&longitude=' + LONDON_LON + '&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability&temperature_unit=celsius&wind_speed_unit=mph&timezone=Europe/London&forecast_days=2';
+
+        async function fetchWeather() {
+            // UPDATED: Removed past_days=1 and precipitation_sum
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${LONDON_LAT}&longitude=${LONDON_LON}&current=temperature_2m,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability&temperature_unit=celsius&wind_speed_unit=mph&timezone=Europe/London&forecast_days=2`;
             
-            var card = document.getElementById('weather-card');
-            var dataDiv = document.getElementById('weather-data');
-            var loadingP = document.getElementById('weather-loading'); 
-            var forecastLoading = document.getElementById('forecast-loading');
+            const card = document.getElementById('weather-card');
+            const dataDiv = document.getElementById('weather-data');
+            const loadingP = document.getElementById('weather-loading'); 
+            // NEW: Get forecast loader
+            const forecastLoading = document.getElementById('forecast-loading');
 
             // 1. Instant Loading Feedback
-            showElement(loadingP);
-            hideElement(dataDiv);
-            card.className = card.className.replace(' error-card-bg', ''); // Reset error
-            showElement(forecastLoading);
-            hideElement(document.getElementById('forecast-list-container'));
+            loadingP.classList.remove('hidden');
+            dataDiv.classList.add('hidden');
+            card.classList.remove('bg-red-900/50'); // Reset error color
+            // NEW: Show forecast loader
+            forecastLoading.classList.remove('hidden');
+            document.getElementById('forecast-list-container').classList.add('hidden');
 
-            // ES5 Promise Chain
-            return fetchData(url, "Open-Meteo weather data", { timeout: 10000 })
-                .then(function(result) {
-                    if (result.error || !result.current) {
-                        hideElement(loadingP);
-                        card.className += ' error-card-bg';
-                        
-                        hideElement(forecastLoading);
-                        showElement(document.getElementById('forecast-list-container'));
-                        document.getElementById('forecast-list').innerHTML = '<p style="color: #9ca3af; font-size: 0.875rem;">Forecast unavailable.</p>';
-                        return; // Stop execution
-                    }
 
-                    // --- 1. Populate Current Weather ---
-                    var temp = result.current.temperature_2m.toFixed(0);
-                    var windSpeed = result.current.wind_speed_10m.toFixed(1); 
-                    var weatherCode = result.current.weather_code;
-                    var weatherInfo = getWeatherDescriptionAndIcon(weatherCode);
+            // ROBUST: Use standardized fetchData with a timeout
+            let result = await fetchData(url, "Open-Meteo weather data", { timeout: 10000 });
 
-                    document.getElementById('temp-display').textContent = temp;
-                    document.getElementById('condition-display').textContent = weatherInfo.description;
-                    document.getElementById('wind-display').textContent = windSpeed;
-                    
-                    var weatherIcon = document.getElementById('weather-icon');
-                    weatherIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="' + weatherInfo.iconPath + '"></path>';
-                    weatherIcon.style.color = weatherInfo.color;
-                    
-                    hideElement(loadingP);
-                    showElement(dataDiv);
+            if (result.error || !result.current) {
+                // Hide the skeleton on error
+                loadingP.classList.add('hidden');
+                // Show a simple error message in its place
+                // Check if error message already exists
+                if (!card.querySelector('.error-message')) {
+                    card.innerHTML += `<p class="text-red-300 error-message">Weather data unavailable.</p>`;
+                }
+                card.classList.add('bg-red-900/50');
+                
+                // NEW: Hide forecast loader on error
+                forecastLoading.classList.add('hidden');
+                document.getElementById('forecast-list-container').classList.remove('hidden');
+                document.getElementById('forecast-list').innerHTML = `<p class="text-gray-400 text-sm">Forecast unavailable.</p>`;
+                return;
+            }
 
-                    // --- 3. Populate Advice ---
-                    displayAdvice(result.hourly);
-                });
+            // --- 1. Populate Current Weather ---
+            const temp = result.current.temperature_2m.toFixed(0);
+            const windSpeed = result.current.wind_speed_10m.toFixed(1); 
+            const weatherCode = result.current.weather_code;
+            const { description, iconPath, color } = getWeatherDescriptionAndIcon(weatherCode);
+
+            document.getElementById('temp-display').textContent = temp;
+            document.getElementById('condition-display').textContent = description;
+            document.getElementById('wind-display').textContent = windSpeed;
+            
+            const weatherIcon = document.getElementById('weather-icon');
+            weatherIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${iconPath}"></path>`;
+            weatherIcon.className = `w-10 h-10 ${color}`;
+            
+            // 2. Hide Loading Skeleton, Show Data
+            loadingP.classList.add('hidden');
+            dataDiv.classList.remove('hidden');
+
+            // --- 3. NEW: Populate Advice ---
+            displayAdvice(result.hourly);
         }
 
-        function fetchBusDepartures() {
-            var url = 'https://api.tfl.gov.uk/StopPoint/' + TFL_NAPTAN_ID + '/Arrivals?timestamp=' + Date.now();
-            var auth = { id: TFL_APP_ID, key: TFL_APP_KEY };
+        async function fetchBusDepartures() {
+            // FIX: Append a unique timestamp to the URL to bypass aggressive caching
+            let url = `https://api.tfl.gov.uk/StopPoint/${TFL_NAPTAN_ID}/Arrivals?timestamp=${Date.now()}`;
+            const auth = { id: TFL_APP_ID, key: TFL_APP_KEY };
             
-            var listDiv = document.getElementById('bus-list');
-            var loadingP = document.getElementById('bus-loading'); 
-            var busListContainer = document.getElementById('bus-list-container');
-            var errorP = document.getElementById('bus-status-error');
-            var busStopTitleSpan = document.getElementById('bus-stop-name-title');
-            var busStopIdSpan = document.getElementById('bus-stop-id');
+            const listDiv = document.getElementById('bus-list');
+            // This ID now points to the skeleton DIV
+            const loadingP = document.getElementById('bus-loading'); 
+            const busListContainer = document.getElementById('bus-list-container');
+            const errorP = document.getElementById('bus-status-error');
+            const busStopTitleSpan = document.getElementById('bus-stop-name-title');
+            const busStopIdSpan = document.getElementById('bus-stop-id');
             
             // 1. Instant Loading Feedback
-            showElement(loadingP);
-            listDiv.innerHTML = '';
-            hideElement(errorP);
-            busListContainer.className = busListContainer.className.replace(' error-card-bg', '');
+            loadingP.classList.remove('hidden');
+            listDiv.innerHTML = ''; // Clear old list immediately
+            errorP.classList.add('hidden'); // Hide old error immediately
+            busListContainer.classList.remove('bg-red-900/50'); // Reset error color
             
+            // Update stop ID text immediately
             busStopIdSpan.textContent = TFL_NAPTAN_ID;
             busStopTitleSpan.textContent = 'Fetching...';
 
-            var busHeaders = {
+            // Headers to explicitly disable caching for this specific API request
+            const busHeaders = {
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                 'Pragma': 'no-cache',
                 'Expires': '0'
             };
 
-            return fetchData(url, "TfL Bus data", {
+            // ROBUST: Use standardized fetchData. 
+            let result = await fetchData(url, "TfL Bus data", {
                 auth: auth,
                 extraHeaders: busHeaders,
                 timeout: FETCH_TIMEOUT_MS 
-            })
-            .then(function(result) {
-                if (result.error) {
-                    console.error("Bus Data Failed:", result.error); 
-                    hideElement(loadingP);
-                    listDiv.innerHTML = '<p class="error-text">Could not retrieve schedule.</p>';
-                    busStopTitleSpan.textContent = 'Error';
-                    errorP.textContent = 'Status: ' + result.error;
-                    showElement(errorP);
-                    busListContainer.className += ' error-card-bg';
-                    return;
-                }
-                
-                var arrivals = result.sort(function(a, b) { return a.timeToStation - b.timeToStation; });
-
-                if (arrivals.length === 0) {
-                    hideElement(loadingP);
-                    listDiv.innerHTML = '<p style="color: #6b7280;">No scheduled departures found.</p>';
-                    busStopTitleSpan.textContent = 'Stop ' + TFL_NAPTAN_ID; 
-                    return;
-                }
-
-                var stationName = arrivals[0].stationName || ('Stop ' + TFL_NAPTAN_ID);
-                busStopTitleSpan.textContent = stripTags(stationName);
-
-                arrivals.slice(0, 10).forEach(function(bus) {
-                    var arrivalMins = minutesToArrival(bus.expectedArrival);
-                    
-                    var timeText;
-                    var timeClass;
-
-                    if (arrivalMins <= 1) {
-                        timeText = 'NOW';
-                        timeClass = 'bg-red-500-70 text-white-bold-pulse';
-                    } else if (arrivalMins <= 5) {
-                        timeText = arrivalMins + ' min';
-                        timeClass = 'bg-yellow-500-70 text-gray-900-bold';
-                    } else {
-                        timeText = arrivalMins + ' min';
-                        timeClass = 'bg-indigo-600-70 text-white-bold';
-                    }
-
-                    var safeDestination = stripTags(bus.destinationName);
-                    var safePlatform = stripTags(bus.platformName) || 'N/A';
-                    var safeLineName = stripTags(bus.lineName);
-
-                    // String concatenation for bus item
-                    var busItem = 
-                        '<div class="bus-item">' +
-                            '<div class="bus-item-left">' +
-                                '<span class="line-name">' + safeLineName + '</span>' +
-                                '<div>' +
-                                    '<p class="line-dest">' + safeDestination + '</p>' +
-                                    '<p class="line-platform">Platform: ' + safePlatform + '</p>' +
-                                '</div>' +
-                            '</div>' +
-                            '<span class="bus-item-time ' + timeClass + '">' +
-                                timeText +
-                            '</span>' +
-                        '</div>';
-                    listDiv.innerHTML += busItem;
-                });
-                
-                hideElement(loadingP);
             });
+
+            if (result.error) {
+                // Log and display the specific error
+                console.error("Bus Data Failed:", result.error); 
+                
+                loadingP.classList.add('hidden'); // Hide skeleton
+                listDiv.innerHTML = `<p class="text-red-300">Could not retrieve schedule.</p>`;
+                
+                // Display error in the new header section
+                busStopTitleSpan.textContent = `Error`;
+                errorP.textContent = `Status: ${result.error}`;
+                errorP.classList.remove('hidden');
+                busListContainer.classList.add('bg-red-900/50'); // Glass error style
+                return;
+            }
+            
+            const arrivals = result.sort((a, b) => a.timeToStation - b.timeToStation);
+
+            if (arrivals.length === 0) {
+                loadingP.classList.add('hidden'); // Hide skeleton
+                listDiv.innerHTML = `<p class="text-gray-500">No scheduled departures found for this stop in the next 30 minutes.</p>`;
+                // Try to get station name from NAPTAN ID if no arrivals
+                busStopTitleSpan.textContent = `Stop ${TFL_NAPTAN_ID}`; 
+                return;
+            }
+
+            // Get stop name from the first result and update the title
+            const stationName = arrivals[0].stationName || `Stop ${TFL_NAPTAN_ID}`;
+            busStopTitleSpan.textContent = stripTags(stationName); // Sanitize
+
+            arrivals.slice(0, 10).forEach(bus => {
+                const arrivalMins = minutesToArrival(bus.expectedArrival);
+                
+                let timeText;
+                let bgColorClass;
+                let textColorClass = 'text-white';
+
+                if (arrivalMins <= 1) {
+                    timeText = 'NOW';
+                    bgColorClass = 'bg-red-500/70';
+                    textColorClass = 'text-white font-extrabold animate-pulse';
+                } else if (arrivalMins <= 5) {
+                    timeText = `${arrivalMins} min`;
+                    bgColorClass = 'bg-yellow-500/70';
+                    textColorClass = 'text-gray-900 font-bold';
+                } else {
+                    timeText = `${arrivalMins} min`;
+                    bgColorClass = 'bg-indigo-600/70';
+                    textColorClass = 'text-white font-bold';
+                }
+
+                // ROBUST: Sanitize dynamic text data before inserting into HTML
+                const safeDestination = stripTags(bus.destinationName);
+                const safePlatform = stripTags(bus.platformName) || 'N/A';
+                const safeLineName = stripTags(bus.lineName);
+
+                // NEW: Added 'bus-item' class for CSS striping
+                const busItem = `
+                    <div class="flex items-center justify-between p-3 glass-card rounded-xl transition-all hover:bg-white/10 bus-item">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-2xl font-extrabold text-cyan-200 w-10 text-center">${safeLineName}</span>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-white font-medium truncate">${safeDestination}</p>
+                                <p class="text-xs text-gray-400">Platform: ${safePlatform}</p>
+                            </div>
+                        </div>
+                        <span class="px-4 py-1 text-sm rounded-full ${bgColorClass} ${textColorClass} shadow-md">
+                            ${timeText}
+                        </span>
+                    </div>
+                `;
+                listDiv.innerHTML += busItem;
+            });
+            
+            // 2. Hide Loading Skeleton
+            loadingP.classList.add('hidden');
         }
 
+        // --- REMOVED: The entire manual drawTideGraph function is gone ---
+
         /**
-         * NEW: Function to render the tide graph using Chart.js (ES5 compatible)
+         * NEW: Function to render the tide graph using Chart.js
+         * This function creates an interactive, responsive chart.
+         * @param {string[]} labels - Array of time labels (e.g., "14:00")
+         * @param {number[]} data - Array of tide level values
          */
         function renderTideChart(labels, data) {
-            var canvas = document.getElementById('tide-graph-canvas');
-            if (!canvas) return;
-            var ctx = canvas.getContext('2d');
+            const canvas = document.getElementById('tide-graph-canvas');
+            if (!canvas) return; // Guard clause
+            const ctx = canvas.getContext('2d');
 
-            var graphColor = '#38bdf8';
-            var pointColor = '#7dd3fc';
+            // Define colors from the CSS
+            const graphColor = '#38bdf8'; // Sky blue
+            const pointColor = '#7dd3fc'; // Cyan
 
-            var gradient = ctx.createLinearGradient(0, 0, 0, 150);
+            // Create the gradient fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, 150);
             gradient.addColorStop(0, 'rgba(56, 189, 248, 0.3)');
             gradient.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
 
+            // Destroy the old chart instance if it exists (for refreshes)
             if (tideChartInstance) {
                 tideChartInstance.destroy();
             }
@@ -1154,90 +839,100 @@
                         fill: true,
                         borderWidth: 2,
                         pointBackgroundColor: pointColor,
-                        pointRadius: 0,
-                        pointHoverRadius: 4,
-                        tension: 0.1
+                        pointRadius: 0, // Hide points by default
+                        pointHoverRadius: 4, // Show on hover
+                        tension: 0.1 // Slight curve
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: false, // Allows chart to fill container height
                     animation: {
-                        duration: 400
+                        duration: 400 // Smooth animation on load
                     },
                     plugins: {
                         legend: {
-                            display: false
+                            display: false // Hide legend
                         },
                         tooltip: {
-                            enabled: true,
+                            enabled: true, // This is the feature!
                             mode: 'index',
                             intersect: false,
-                            displayColors: false,
+                            displayColors: false, // Hide the little color box
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    // UPDATED: Handle the label being a string.
+                                    const title = tooltipItems[0].label;
+                                    return `Time: ${title}`;
+                                },
+                                label: function(context) {
+                                    // Show the tide level
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += `${context.parsed.y.toFixed(2)} m`;
+                                    }
+                                    return label;
+                                }
+                            },
+                            // NEW: Tooltip styling for dark background
                             backgroundColor: 'rgba(30, 41, 59, 0.85)',
                             titleColor: '#e5e7eb',
                             bodyColor: '#e5e7eb',
                             borderColor: 'rgba(107, 114, 128, 0.2)',
                             borderWidth: 1,
-                            cornerRadius: 8,
-                            callbacks: {
-                                title: function(tooltipItems) {
-                                    var title = tooltipItems[0].label;
-                                    return 'Time: ' + title;
-                                },
-                                label: function(context) {
-                                    var label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += context.parsed.y.toFixed(2) + ' m';
-                                    }
-                                    return label;
-                                }
-                            }
+                            cornerRadius: 8
                         }
                     },
                     scales: {
                         x: {
-                            display: true,
+                            display: true, // Show X-axis
                             title: {
                                 display: true,
                                 text: 'Time',
-                                color: '#9ca3af',
-                                font: { size: 12, weight: 'bold' }
+                                color: '#9ca3af', // Axis title color
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
                             },
                             grid: {
-                                color: 'rgba(107, 114, 128, 0.1)',
+                                color: 'rgba(107, 114, 128, 0.1)', // Subtle grid lines
                                 drawBorder: false
                             },
                             ticks: {
-                                color: '#9ca3af',
+                                color: '#9ca3af', // X-axis tick labels color
                                 maxRotation: 0,
                                 minRotation: 0,
                                 autoSkip: true,
-                                maxTicksLimit: 6,
+                                maxTicksLimit: 6, // Limit the number of labels to prevent overlap
                                 callback: function(value, index, ticks) {
+                                    // UPDATED: Logic simplified to just return the time
                                     return this.getLabelForValue(value); 
                                 }
                             }
                         },
                         y: {
-                            display: true,
+                            display: true, // Show Y-axis
                             title: {
                                 display: true,
                                 text: 'Tide Level (m)',
-                                color: '#9ca3af',
-                                font: { size: 12, weight: 'bold' }
+                                color: '#9ca3af', // Axis title color
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
                             },
                             grid: {
-                                color: 'rgba(107, 114, 128, 0.1)',
+                                color: 'rgba(107, 114, 128, 0.1)', // Subtle grid lines
                                 drawBorder: false
                             },
                             ticks: {
-                                color: '#9ca3af',
+                                color: '#9ca3af', // Y-axis tick labels color
                                 callback: function(value, index, ticks) {
-                                    return value.toFixed(1) + ' m';
+                                    return value.toFixed(1) + ' m'; // Format Y-axis labels
                                 }
                             }
                         }
@@ -1246,145 +941,184 @@
             });
         }
 
-        function fetchTides() {
-            var now = new Date();
-            var fortyEightHoursAgo = now.getTime() - (48 * 60 * 60 * 1000);
-            var readingsUrl = 'https://environment.data.gov.uk/flood-monitoring/id/stations/' + EA_TIDE_STATION_ID + '/readings?_sorted&_limit=1000';
+
+        async function fetchTides() {
+            const now = new Date();
+            // Define the 48-hour cutoff time
+            const fortyEightHoursAgo = now.getTime() - (48 * 60 * 60 * 1000);
+
+            // Fetch 24 hours of data (96 readings * 15 min interval) + 4 extra readings to cover the current minute
+            // Using a limit of 1000 ensures enough data is retrieved for robust analysis.
+            const readingsUrl = `https://environment.data.gov.uk/flood-monitoring/id/stations/${EA_TIDE_STATION_ID}/readings?_sorted&_limit=1000`;
             
-            var dataDiv = document.getElementById('tide-data');
-            var loadingP = document.getElementById('tide-loading'); 
-            var card = document.getElementById('tide-card').parentNode; // Get the .card-column
-            var stationNameP = document.getElementById('tide-station-name');
+            const dataDiv = document.getElementById('tide-data');
+            // This ID now points to the skeleton DIV
+            const loadingP = document.getElementById('tide-loading'); 
+            const card = document.getElementById('tide-card');
+            const stationNameP = document.getElementById('tide-station-name');
+            // REMOVED: Accordion element references
             
-            showElement(loadingP);
-            hideElement(dataDiv);
-            card.className = card.className.replace(' error-card-bg', '');
+            // 1. Instant Loading Feedback
+            loadingP.classList.remove('hidden');
+            dataDiv.classList.add('hidden');
+            card.classList.remove('bg-red-900/50'); // Reset error color
             
-            stationNameP.textContent = 'Source: Tower Pier (Location ID ' + EA_TIDE_STATION_ID + ')';
+            // Set the station information immediately based on the known Location ID
+            stationNameP.textContent = `Source: Tower Pier (Location ID ${EA_TIDE_STATION_ID})`;
             
-            return fetchData(readingsUrl, "EA Tide data", { timeout: FETCH_TIMEOUT_MS })
-                .then(function(result) {
-                    if (result.error) {
-                        hideElement(loadingP);
-                        card.className += ' error-card-bg';
-                        renderTideChart([], []); 
-                        return;
-                    }
+            // REMOVED: Accordion reset logic
 
-                    var readings = result.items || [];
-                    if (readings.length < 5) {
-                         hideElement(loadingP);
-                         card.className += ' error-card-bg';
-                         renderTideChart([], []); 
-                         return;
-                    }
-                    
-                    var chartReadings = readings
-                        .filter(function(r) { return typeof r.value === 'number' && new Date(r.dateTime).getTime() >= fortyEightHoursAgo; })
-                        .slice()
-                        .reverse();
+            // ROBUST: Use the standardized fetchData function instead of a raw fetch.
+            let result = await fetchData(readingsUrl, "EA Tide data", { 
+                timeout: FETCH_TIMEOUT_MS 
+            });
 
-                    var labels = chartReadings.map(function(r) { return formatChartLabel(r.dateTime); }); 
-                    var data = chartReadings.map(function(r) { return r.value; });
-                    
-                    renderTideChart(labels, data);
+            if (result.error) {
+                loadingP.classList.add('hidden'); // Hide skeleton
+                if (!card.querySelector('.error-message')) {
+                    card.innerHTML += `<p class="text-red-300 error-message">Tide data unavailable.</p>`;
+                }
+                card.classList.add('bg-red-900/50'); 
+                
+                // Clear the graph if the data fails
+                renderTideChart([], []); 
+                return;
+            }
 
-                    var latestValue = readings[0]; 
-                    var previousValue = readings[1];
-                    
-                    if (!latestValue || !previousValue || typeof latestValue.value !== 'number' || typeof previousValue.value !== 'number') {
-                        hideElement(loadingP);
-                        card.className += ' error-card-bg';
-                        return;
-                    }
+            const readings = result.items || [];
+            if (readings.length < 5) { // Need at least 5 readings (1 hour) for basic trend
+                 loadingP.classList.add('hidden'); // Hide skeleton
+                 if (!card.querySelector('.error-message')) {
+                    card.innerHTML += `<p class="text-gray-400 error-message">Insufficient tide data.</p>`;
+                 }
+                 card.classList.add('bg-red-900/50');
+                 renderTideChart([], []); 
+                 return;
+            }
+            
+            // *** NEW: Call renderTideChart instead of drawTideGraph ***
+            // Filter readings to the last 48 hours, then reverse for chronological chart
+            const chartReadings = readings
+                .filter(r => typeof r.value === 'number' && new Date(r.dateTime).getTime() >= fortyEightHoursAgo)
+                .slice()
+                .reverse();
 
-                    var levelValue = latestValue.value;
-                    var previousLevelValue = previousValue.value;
-                    var levelValueFormatted = levelValue.toFixed(2);
-                    var readingTime = formatDateTime(latestValue.dateTime);
-                    
-                    var directionText;
-                    var directionColor;
-                    var directionPath;
-                    var tolerance = 0.01; 
+            // Create labels (times) and data (values)
+            // Use new formatChartLabel for X-axis
+            const labels = chartReadings.map(r => formatChartLabel(r.dateTime)); 
+            const data = chartReadings.map(r => r.value);
+            
+            // Call the new Chart.js render function
+            renderTideChart(labels, data);
 
-                    if (levelValue > previousLevelValue + tolerance) {
-                        directionText = "RISING";
-                        directionColor = 'color: #4ade80;'; // text-green-400
-                        directionPath = 'M10 17V3m0 0l-4 4m4-4l4 4';
-                    } else if (levelValue < previousLevelValue - tolerance) {
-                        directionText = "FALLING";
-                        directionColor = 'color: #f87171;'; // text-red-400
-                        directionPath = 'M10 3v14m0 0l-4-4m4 4l4-4';
-                    } else {
-                        directionText = "STEADY";
-                        directionColor = 'color: #9ca3af;'; // text-gray-400
-                        directionPath = 'M4 10h16';
-                    }
 
-                    document.getElementById('tide-level').textContent = levelValueFormatted;
-                    document.getElementById('tide-status').innerHTML = 
-                        directionText +
-                        ' <svg style="width: 1.25rem; height: 1.25rem; display: inline-block; margin-left: 0.25rem; vertical-align: sub; ' + directionColor + '" fill="none" stroke="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">' +
-                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="' + directionPath + '"/>' +
-                        '</svg>';
-                    
-                    document.getElementById('tide-time').textContent = readingTime;
+            // Readings are already sorted by time (latest first)
+            const latestValue = readings[0]; 
+            const previousValue = readings[1];
+            
+            // Guard against missing or invalid data
+            if (!latestValue || !previousValue || typeof latestValue.value !== 'number' || typeof previousValue.value !== 'number') {
+                loadingP.classList.add('hidden'); // Hide skeleton
+                if (!card.querySelector('.error-message')) {
+                    card.innerHTML += `<p class="text-gray-400 error-message">Invalid tide data received.</p>`;
+                }
+                card.classList.add('bg-red-900/50');
+                return;
+            }
 
-                    var tideIcon = document.getElementById('tide-icon');
-                    tideIcon.style.color = '#60a5fa'; // text-blue-400
-                    
-                    hideElement(loadingP);
-                    showElement(dataDiv);
-                });
+            const levelValue = latestValue.value;
+            const previousLevelValue = previousValue.value;
+
+            const levelValueFormatted = levelValue.toFixed(2);
+            const readingTime = formatDateTime(latestValue.dateTime);
+            
+            // --- 2. Determine Direction ---
+            let directionText;
+            let directionColor;
+            let directionPath;
+            const tolerance = 0.01; 
+
+            if (levelValue > previousLevelValue + tolerance) {
+                directionText = "RISING";
+                directionColor = 'text-green-400';
+                directionPath = 'M10 17V3m0 0l-4 4m4-4l4 4'; // Up arrow
+            } else if (levelValue < previousLevelValue - tolerance) {
+                directionText = "FALLING";
+                directionColor = 'text-red-400';
+                directionPath = 'M10 3v14m0 0l-4-4m4 4l4-4'; // Down arrow
+            } else {
+                directionText = "STEADY";
+                directionColor = 'text-gray-400';
+                directionPath = 'M4 10h16'; // Horizontal line
+            }
+
+            // --- REMOVED: 3. Analyze Historical Extremes (High/Low Tide Times) ---
+            
+            // --- REMOVED: 4. Update Prediction Display ---
+            
+            // --- REMOVED: 5. Update Accordion Summary Text ---
+
+
+            // --- 6. Update DOM with Current Level and Direction ---
+            document.getElementById('tide-level').textContent = levelValueFormatted;
+
+            // Use innerHTML to inject text and the SVG arrow, using the dynamic directionColor
+            document.getElementById('tide-status').innerHTML = `
+                ${directionText}
+                <svg class="w-5 h-5 inline-block ml-1 align-sub ${directionColor}" fill="none" stroke="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${directionPath}"/>
+                </svg>
+            `;
+            
+            document.getElementById('tide-time').textContent = readingTime;
+
+            // Main Wave Icon Color: Remains static blue
+            const tideIcon = document.getElementById('tide-icon');
+            tideIcon.classList.remove('text-cyan-400', 'text-green-400', 'text-red-400', 'text-gray-400'); // Clear dynamic colors
+            tideIcon.classList.add('text-blue-400'); // Set to static blue
+            
+            // 7. Hide Loading Skeleton, Show Data
+            loadingP.classList.add('hidden');
+            dataDiv.classList.remove('hidden');
         }
 
-        // --- MAIN DASHBOARD LOGIC (ES5) ---
+        // --- MAIN DASHBOARD LOGIC (Auto-Refresh) ---
         
-        window.addEventListener('error', function(event) {
+        // NEW: Global error handlers for uncaught issues
+        window.addEventListener('error', (event) => {
             console.error('Uncaught Error:', event.error);
+            // This is a good place to show a generic error banner on the page
         });
-        
-        // No 'unhandledrejection' in Safari 9, .catch() blocks are needed.
 
-        function updateDashboard() {
-            // Promise.all is supported
-            var fetchPromises = [
-                fetchWeather(),
-                fetchTides(),
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled Promise Rejection:', event.reason);
+        });
+
+
+        // This function combines all fetching logic
+        async function updateDashboard() {
+            // Set up all fetch operations
+            const fetchPromises = [
+                fetchWeather(), // Now handles Current Weather + 24h Forecast
+                fetchTides(), // Now handles Current Level/Direction + Historical Extremes
                 fetchBusDepartures()
             ];
 
-            // Use a simple polyfill for allSettled-like behavior (wait for all)
-            Promise.all(fetchPromises)
-                .then(function(results) {
-                    // This will run after all promises have resolved (or one has rejected)
-                    // In our case, fetch functions resolve with an error object, so they won't reject
-                    document.getElementById('last-updated').textContent = 'Last updated: ' + formatTime(new Date());
-                })
-                .catch(function(err) {
-                    // This will catch if a promise *rejects*, which ours shouldn't
-                    // but it's good practice.
-                    console.error("A critical error occurred:", err);
-                    document.getElementById('last-updated').textContent = 'Last updated: ' + formatTime(new Date()) + ' (with errors)';
-                });
+            // Wait for all fetches to finish (regardless of success/failure)
+            await Promise.allSettled(fetchPromises);
+
+            // Update last updated time after all fetches are complete
+            document.getElementById('last-updated').textContent = `Last updated: ${formatTime(new Date())}`;
         }
 
 
+        // Run the update function immediately and then every 60 seconds (1 minute)
         window.onload = function () {
-            // Manually hide data/show skeletons
-            hideElement(document.getElementById('weather-data'));
-            showElement(document.getElementById('weather-loading'));
-            hideElement(document.getElementById('forecast-list-container'));
-            showElement(document.getElementById('forecast-loading'));
-            hideElement(document.getElementById('tide-data'));
-            showElement(document.getElementById('tide-loading'));
-            hideElement(document.getElementById('bus-list'));
-            showElement(document.getElementById('bus-loading'));
-
             updateDashboard();
+            // Start clock ticking every second
             updateTimeAndDate(); 
             setInterval(updateTimeAndDate, 1000); 
+            // Refresh data every 60 seconds (60000 milliseconds)
             setInterval(updateDashboard, 60000); 
         }
     </script>
